@@ -2,8 +2,6 @@ package com.spring.dao;
 
 import java.util.List;
 
-import javax.transaction.Transactional;
-
 import org.hibernate.query.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -19,7 +17,6 @@ public class CustomerDAOImp implements CustomerDAO {
 	private SessionFactory sessionFactory;	
 	
 	@Override
-	@Transactional
 	public List<Customer> getCustomers() {
 		
 		Session cuurentSession = sessionFactory.getCurrentSession();
@@ -31,4 +28,34 @@ public class CustomerDAOImp implements CustomerDAO {
 		return customers;
 	}
 
+	@Override
+	public void saveCustomer(Customer customer) {
+		
+		Session cuurentSession = sessionFactory.getCurrentSession();
+		
+		cuurentSession.saveOrUpdate(customer);
+	}
+
+	@Override
+	public Customer getCustomer(int id) {
+		
+		Session currentSession = sessionFactory.getCurrentSession();
+		
+		Customer customer = currentSession.get(Customer.class, id);
+		
+		return customer;
+	}
+	
+	@Override
+	public void deleteCustomer(int id) {
+
+		Session currentSession = sessionFactory.getCurrentSession();
+		
+		Query theQuery = currentSession.createQuery("delete from Customer where id=:customerId");
+		theQuery.setParameter("customerId", id);
+		
+		theQuery.executeUpdate();		
+	}
+
 }
+
